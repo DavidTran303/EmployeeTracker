@@ -37,7 +37,7 @@ inquirer
         addRoles();
       } 
       else if(answer.add === "EMPLOYEES"){
-        console.log("EMPLOYEES")
+        addEmployee();
       }
     });
 }
@@ -69,21 +69,27 @@ function addDepartment(){
 function addRoles(){
     inquirer
     .prompt(
-        {
-      name: "addTitle",
-      type: "input",
-      message: "What's the title of the role?",
+        [{
+       name: "addTitle",
+       type: "input",
+       message: "What's the title of the role?",
         },
         {
-      name: "addSalary",
-      type: "input",
-      message: "What's desired salary of this role?",
+       name: "addSalary",
+       type: "input",
+       message: "What's desired salary of this role?",
+       validate: function(value) {
+          if (isNaN(value) === false) {
+            return true;
+          }
+          return false;
+            }
         },
         {
-    name: "addId",
-      type: "input",
-      message: "What's the department id number?",
-        }
+        name: "addId",
+        type: "input",
+        message: "What's the department id number?",
+        }]
     )
      .then(function(answer) {
       connection.query(
@@ -102,5 +108,46 @@ function addRoles(){
     });
 }
 
-
+// function to add roles
+function addEmployee(){
+    inquirer
+    .prompt(
+        [{
+       name: "addName",
+       type: "input",
+       message: "What's the new employee first name?",
+        },
+        {
+       name: "addLastName",
+       type: "input",
+       message: "Whats the new employee last name?",
+        },
+        {
+        name: "addRoleId",
+        type: "input",
+        message: "What's the new employee role id?",
+        },
+        {
+        name: "addManagerId",
+        type: "input",
+        message: "What's the new employee manager role id?",
+        }]
+    )
+     .then(function(answer) {
+      connection.query(
+        "INSERT INTO employee SET ?",
+        {
+          first_name: answer.addName,
+          last_name: answer.addLastName,
+          role_id:  answer.addRoleId,
+          manager_id: answer.addManagerId
+        },
+        function(err) {
+          if (err) throw err;
+          console.log("You successfully added your new employee");
+          add();
+        }
+      );
+    });
+}
 
