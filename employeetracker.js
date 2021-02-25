@@ -66,5 +66,42 @@ function addDepartment(){
     });
 }
 
+// function to add roles
+// function addRoles(){
+//     inquirer
+//     .prompt(
+//         {
+//       name: "addRolesTitle",
+//       type: "input",
+//       message: "What's the title of the role?",
+//         },
+//          {
+//       name: "addRolesSalary",
+//       type: "input",
+//       message: "What's desired salary of this role?",
+//         },
+//         {
+
+//         }
+
+
+
+//     )
+//      .then(function(answer) {
+//       // when finished prompting, insert a new item into the db with that info
+//       connection.query(
+//         "INSERT INTO department SET ?",
+//         {
+//           name: answer.addRoles
+//         },
+//         function(err) {
+//           if (err) throw err;
+//           console.log("You successfully added your department");
+//           add();
+//         }
+//       );
+//     });
+// }
+
 
 
