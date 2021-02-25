@@ -34,7 +34,7 @@ inquirer
         addDepartment();
       }
       else if(answer.add === "ROLES") {
-        console.log("ROLES")
+        addRoles();
       } 
       else if(answer.add === "EMPLOYEES"){
         console.log("EMPLOYEES")
@@ -51,7 +51,6 @@ function addDepartment(){
       message: "What department would you like to add?",
         })
      .then(function(answer) {
-      // when finished prompting, insert a new item into the db with that info
       connection.query(
         "INSERT INTO department SET ?",
         {
@@ -67,41 +66,41 @@ function addDepartment(){
 }
 
 // function to add roles
-// function addRoles(){
-//     inquirer
-//     .prompt(
-//         {
-//       name: "addRolesTitle",
-//       type: "input",
-//       message: "What's the title of the role?",
-//         },
-//          {
-//       name: "addRolesSalary",
-//       type: "input",
-//       message: "What's desired salary of this role?",
-//         },
-//         {
-
-//         }
-
-
-
-//     )
-//      .then(function(answer) {
-//       // when finished prompting, insert a new item into the db with that info
-//       connection.query(
-//         "INSERT INTO department SET ?",
-//         {
-//           name: answer.addRoles
-//         },
-//         function(err) {
-//           if (err) throw err;
-//           console.log("You successfully added your department");
-//           add();
-//         }
-//       );
-//     });
-// }
+function addRoles(){
+    inquirer
+    .prompt(
+        {
+      name: "addTitle",
+      type: "input",
+      message: "What's the title of the role?",
+        },
+        {
+      name: "addSalary",
+      type: "input",
+      message: "What's desired salary of this role?",
+        },
+        {
+    name: "addId",
+      type: "input",
+      message: "What's the department id number?",
+        }
+    )
+     .then(function(answer) {
+      connection.query(
+        "INSERT INTO role SET ?",
+        {
+          title: answer.addTitle,
+          salary: answer.addSalary,
+          department_id:  answer.addId
+        },
+        function(err) {
+          if (err) throw err;
+          console.log("You successfully added your department");
+          add();
+        }
+      );
+    });
+}
 
 
 
