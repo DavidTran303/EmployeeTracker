@@ -26,7 +26,7 @@ function optionMenu(){
             name: 'option',
             type: 'list',
             message: 'Add or View departments, roles, or employees?',
-            choices:["ADD", "VIEW", "EXIT"]
+            choices:["ADD", "VIEW", "UPDATE"]
         })
         .then(function(answer){
             if(answer.option === "ADD"){
@@ -35,17 +35,23 @@ function optionMenu(){
             else if(answer.option === "VIEW"){
                 viewOption();
             }
-            console.log(answer)
+            else if(answer.option === "UPDATE"){
+                updateEmployee();
+            }
         })
         // .then(function)
             
 };
-// optionMenu();
+
 
 
 viewOption = () =>{
     {
-    connection.query("SELECT * FROM  department", (err,data)=>{
+    connection.query(`SELECT employee.id, employee.first_name, employee.last_name, title, department.name AS department, salary, CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM
+  employee INNER JOIN role ON employee.role_id = role.id 
+  INNER JOIN department ON role.department_id = department.id 
+  LEFT JOIN employee AS manager ON employee.manager_id = manager.id
+ ORDER BY employee.id` , (err,data)=>{
         if (err) throw err;
         console.log('read')
         console.table(data);
@@ -188,3 +194,28 @@ function addEmployee(){
     });
 }
 
+function updateEmployee(){
+    connection.query('SELECT * FROM employee', (err,data) => {
+    if(err) throw err;
+    let employee = data;
+    console.log(employee)
+    inquirer
+        .prompt([
+        {
+        name: "edit",
+        type: "list",
+        message: "What would you like to edit?",
+        choices: employee.map(data =>{
+             return  data.first_name + " " + data.last_name;
+            }) 
+        }
+        ])
+    .then(answers => {
+        optionMenu();
+            })
+    
+        });
+}
+    
+        
+    
