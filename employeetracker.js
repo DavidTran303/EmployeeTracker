@@ -15,13 +15,49 @@ var connection = mysql.createConnection({
 connection.connect(function(err) {
   if (err) throw err;
   console.log(`connected as id ${connection.threadId}`);
-  add();
+  optionMenu();
 });
 
 
-//function to add departments, roles, employees
 
-function add(){
+function optionMenu(){
+    inquirer
+        .prompt({
+            name: 'option',
+            type: 'list',
+            message: 'Add or View departments, roles, or employees?',
+            choices:["ADD", "VIEW", "EXIT"]
+        })
+        .then(function(answer){
+            if(answer.option === "ADD"){
+                addChoices();
+            }
+            else if(answer.option === "VIEW"){
+                viewOption();
+            }
+            console.log(answer)
+        })
+        // .then(function)
+            
+};
+// optionMenu();
+
+
+viewOption = () =>{
+    {
+    connection.query("SELECT * FROM  department", (err,data)=>{
+        if (err) throw err;
+        console.log('read')
+        console.table(data);
+       optionMenu();
+        
+    })
+    }
+}
+
+
+//function to add departments, roles, employees
+function addChoices(){
 inquirer
     .prompt({
       name: "add",
@@ -46,7 +82,7 @@ inquirer
 function addDepartment(){
     inquirer
     .prompt({
-      name: "addDepartment",
+      name: "department",
       type: "input",
       message: "What department would you like to add?",
         })
@@ -54,28 +90,29 @@ function addDepartment(){
       connection.query(
         "INSERT INTO department SET ?",
         {
-          name: answer.addDepartment
+          name: answer.department
         },
         function(err) {
           if (err) throw err;
           console.log("You successfully added your department");
-          add();
+          optionMenu();
         }
       );
-    });
+    })
 }
+
 
 // function to add roles
 function addRoles(){
     inquirer
     .prompt(
         [{
-       name: "addTitle",
+       name: "title",
        type: "input",
        message: "What's the title of the role?",
         },
         {
-       name: "addSalary",
+       name: "salary",
        type: "input",
        message: "What's desired salary of this role?",
        validate: function(value) {
@@ -86,7 +123,7 @@ function addRoles(){
             }
         },
         {
-        name: "addId",
+        name: "id",
         type: "input",
         message: "What's the department id number?",
         }]
@@ -95,40 +132,40 @@ function addRoles(){
       connection.query(
         "INSERT INTO role SET ?",
         {
-          title: answer.addTitle,
-          salary: answer.addSalary,
-          department_id:  answer.addId
+          title: answer.title,
+          salary: answer.salary,
+          department_id:  answer.id
         },
         function(err) {
           if (err) throw err;
           console.log("You successfully added your department");
-          add();
+            optionMenu();
         }
       );
     });
 }
 
-// function to add roles
+// function to add Employee
 function addEmployee(){
     inquirer
     .prompt(
         [{
-       name: "addName",
+       name: "name",
        type: "input",
        message: "What's the new employee first name?",
         },
         {
-       name: "addLastName",
+       name: "lastName",
        type: "input",
        message: "Whats the new employee last name?",
         },
         {
-        name: "addRoleId",
+        name: "roleId",
         type: "input",
         message: "What's the new employee role id?",
         },
         {
-        name: "addManagerId",
+        name: "managerId",
         type: "input",
         message: "What's the new employee manager role id?",
         }]
@@ -137,15 +174,15 @@ function addEmployee(){
       connection.query(
         "INSERT INTO employee SET ?",
         {
-          first_name: answer.addName,
-          last_name: answer.addLastName,
-          role_id:  answer.addRoleId,
-          manager_id: answer.addManagerId
+          first_name: answer.name,
+          last_name: answer.lastName,
+          role_id:  answer.roleId,
+          manager_id: answer.managerId
         },
         function(err) {
           if (err) throw err;
           console.log("You successfully added your new employee");
-          add();
+          optionMenu();
         }
       );
     });
